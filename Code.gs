@@ -3,13 +3,13 @@
  * 1) أنشئ Google Sheet فارغاً.
  * 2) من Extensions > Apps Script الصق هذا الملف.
  * 3) شغّل setup() مرة واحدة ووافق على الصلاحيات.
- * 4) من Project Settings > Script Properties أضف:
- *    TEACHER_PASSWORD = كلمة مرور قوية خاصة بالمعلم
+ * 4) شغّل setup()؛ سيتم ضبط TEACHER_PASSWORD تلقائياً على كلمة المرور المتفق عليها.
  * 5) Deploy > New deployment > Web app
  *    Execute as: Me | Who has access: Anyone
  * 6) انسخ رابط Web App وضعه في CONFIG.API_URL داخل index.html.
  */
 const SHEET_NAME = "نتائج الاختبارات";
+const TEACHER_DEFAULT_PASSWORD = "01004422591";
 function setup() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sh = ss.getSheetByName(SHEET_NAME);
@@ -18,7 +18,9 @@ function setup() {
     sh.appendRow(["وقت التسجيل","اسم الطالب","الفصل","البريد الإلكتروني","الدرجة","الدرجة الكلية","الصحيحة","الخاطئة","وقت البداية","وقت النهاية","المدة بالثواني","تفاصيل الإجابات"]);
     sh.setFrozenRows(1);
   }
-  return "تم تجهيز ورقة النتائج";
+  // تعيين كلمة مرور المعلم المطلوبة في Script Properties عند تشغيل setup.
+  PropertiesService.getScriptProperties().setProperty("TEACHER_PASSWORD", TEACHER_DEFAULT_PASSWORD);
+  return "تم تجهيز ورقة النتائج وضبط كلمة مرور المعلم";
 }
 function doPost(e) {
   try {
